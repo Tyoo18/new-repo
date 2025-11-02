@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turn Table</title>
+    <title>Vinyl Turntable Player</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             display: flex;
             justify-content: center;
@@ -19,7 +19,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: 'Arial', sans-serif;
         }
-        
+
         .container {
             text-align: center;
             background: white;
@@ -27,54 +27,172 @@
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
-        
+
         h1 {
             color: #333;
             margin-bottom: 30px;
             font-size: 2.5em;
         }
-        
-        .wheel-container {
+
+        /* Turntable */
+        .turntable-wrapper {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 350px;
             margin: 0 auto 30px;
         }
-        
-        .wheel {
+
+        /* Turntable Base */
+        .turntable-base {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(to bottom, #2c3e50, #1a1a1a);
+            border-radius: 40px 40px 50px 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 2px 5px rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        /* Vinyl Disc */
+        .vinyl-disc {
+            position: absolute;
+            bottom: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle at 30% 30%, #1a1a1a, #000);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.9);
+            z-index: 2;
+            animation: spin 4s linear infinite;
+            animation-play-state: paused;
+        }
+
+        .vinyl-disc.playing {
+            animation-play-state: running;
+        }
+
+        @keyframes spin {
+            from {
+                transform: translateX(-50%) rotate(0deg);
+            }
+            to {
+                transform: translateX(-50%) rotate(360deg);
+            }
+        }
+
+        /* Vinyl grooves/tracks */
+        .vinyl-disc::before {
+            content: '';
+            position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
+            background: repeating-radial-gradient(
+                circle at center,
+                transparent 0px,
+                transparent 5px,
+                rgba(255, 255, 255, 0.05) 5px,
+                rgba(255, 255, 255, 0.05) 6px
+            );
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Center label */
+        .vinyl-label {
+            position: absolute;
+            bottom: 195px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 35% 35%, #667eea, #764ba2);
+            border-radius: 50%;
+            z-index: 3;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             color: white;
-            font-size: 20px;
-            transition: transform 0.1s linear;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 10px;
+            text-align: center;
+            padding: 10px;
+            animation: spin 4s linear infinite;
+            animation-play-state: paused;
         }
-        
-        .needle {
+
+        .vinyl-label.playing {
+            animation-play-state: running;
+        }
+
+        /* Tonearm */
+        .tonearm-base {
             position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #ff6b6b;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
+            bottom: 90px;
+            right: 30px;
+            width: 15px;
+            height: 30px;
+            background: #333;
+            border-radius: 0 0 5px 5px;
+            z-index: 4;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
-        
+
+        .tonearm {
+            position: absolute;
+            bottom: 115px;
+            right: 20px;
+            width: 200px;
+            height: 15px;
+            background: linear-gradient(to right, #555, #333);
+            border-radius: 20px;
+            transform-origin: right center;
+            transform: rotate(-45deg);
+            z-index: 3;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .tonearm.playing {
+            animation: tonearmMove 4s linear infinite;
+        }
+
+        @keyframes tonearmMove {
+            0% {
+                transform: rotate(-45deg);
+            }
+            50% {
+                transform: rotate(-15deg);
+            }
+            100% {
+                transform: rotate(-45deg);
+            }
+        }
+
+        /* Stylus */
+        .stylus {
+            position: absolute;
+            bottom: 110px;
+            right: 25px;
+            width: 3px;
+            height: 20px;
+            background: linear-gradient(to bottom, #ff9800, #ff6b6b);
+            border-radius: 50%;
+            z-index: 5;
+            box-shadow: 0 1px 3px rgba(255, 107, 107, 0.5);
+        }
+
         .button-container {
             display: flex;
             gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
         }
-        
+
         button {
             padding: 12px 30px;
             font-size: 16px;
@@ -84,175 +202,79 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
-        .spin-btn {
+
+        .play-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 15px 40px;
             font-size: 18px;
         }
-        
-        .spin-btn:hover:not(:disabled) {
+
+        .play-btn:hover:not(:disabled) {
             transform: scale(1.05);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
-        
-        .spin-btn:disabled {
+
+        .play-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
-        .reset-btn {
-            background: #e0e0e0;
-            color: #333;
-        }
-        
-        .reset-btn:hover {
-            background: #d0d0d0;
-        }
-        
-        .result {
+
+        .info {
             margin-top: 20px;
-            font-size: 18px;
-            color: #333;
-            min-height: 30px;
-        }
-        
-        .result-text {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 24px;
+            font-size: 16px;
+            color: #666;
+            min-height: 25px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎡 Turn Table</h1>
-        
-        <div class="wheel-container">
-            <div class="needle"></div>
-            <div class="wheel" id="wheel">Spin!</div>
+        <h1>🎵 Vinyl Turntable Player</h1>
+
+        <div class="turntable-wrapper">
+            <div class="turntable-base"></div>
+            <div class="vinyl-disc" id="vinylDisc"></div>
+            <div class="vinyl-label" id="vinylLabel">VINYL</div>
+            <div class="tonearm" id="tonearm"></div>
+            <div class="tonearm-base"></div>
+            <div class="stylus"></div>
         </div>
-        
+
         <div class="button-container">
-            <button class="spin-btn" onclick="spinWheel()" id="spinBtn">Mulai Putar</button>
-            <button class="reset-btn" onclick="resetWheel()">Reset</button>
+            <button class="play-btn" id="playBtn" onclick="togglePlay()">▶ Putar</button>
         </div>
-        
-        <div class="result">
-            <p id="resultText"></p>
+
+        <div class="info">
+            <p id="statusText">Siap diputar</p>
         </div>
     </div>
-    
+
     <script>
-        const colors = [
-            '#FF6B6B',
-            '#4ECDC4',
-            '#45B7D1',
-            '#FFA07A',
-            '#98D8C8',
-            '#F7DC6F',
-            '#BB8FCE',
-            '#85C1E2'
-        ];
-        
-        const items = [
-            'Hadiah 1',
-            'Hadiah 2',
-            'Hadiah 3',
-            'Hadiah 4',
-            'Hadiah 5',
-            'Hadiah 6',
-            'Hadiah 7',
-            'Hadiah 8'
-        ];
-        
-        let currentRotation = 0;
-        let isSpinning = false;
-        
-        function initializeWheel() {
-            const wheel = document.getElementById('wheel');
-            const numSegments = items.length;
-            const segmentAngle = 360 / numSegments;
-            
-            wheel.innerHTML = '';
-            items.forEach((item, index) => {
-                const segment = document.createElement('div');
-                segment.style.position = 'absolute';
-                segment.style.width = '100%';
-                segment.style.height = '100%';
-                segment.style.display = 'flex';
-                segment.style.alignItems = 'center';
-                segment.style.justifyContent = 'center';
-                segment.style.transform = `rotate(${index * segmentAngle}deg)`;
-                segment.style.background = colors[index];
-                segment.style.borderRadius = '50%';
-                segment.style.clip = `polygon(50% 50%, 50% 0%, 100% 0%)`;
-                segment.style.fontSize = '14px';
-                segment.style.fontWeight = 'bold';
-                segment.style.color = 'white';
-                wheel.appendChild(segment);
-            });
-            
-            // Update text di tengah
-            const textDiv = document.createElement('div');
-            textDiv.textContent = 'Spin!';
-            textDiv.style.position = 'relative';
-            textDiv.style.zIndex = '10';
-            textDiv.style.background = 'white';
-            textDiv.style.width = '80px';
-            textDiv.style.height = '80px';
-            textDiv.style.borderRadius = '50%';
-            textDiv.style.display = 'flex';
-            textDiv.style.alignItems = 'center';
-            textDiv.style.justifyContent = 'center';
-            textDiv.style.fontWeight = 'bold';
-            textDiv.style.color = '#333';
-            textDiv.style.boxShadow = '0 3px 10px rgba(0,0,0,0.2)';
-            wheel.appendChild(textDiv);
+        let isPlaying = false;
+        const playBtn = document.getElementById('playBtn');
+        const vinylDisc = document.getElementById('vinylDisc');
+        const vinylLabel = document.getElementById('vinylLabel');
+        const tonearm = document.getElementById('tonearm');
+        const statusText = document.getElementById('statusText');
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+
+            if (isPlaying) {
+                vinylDisc.classList.add('playing');
+                vinylLabel.classList.add('playing');
+                tonearm.classList.add('playing');
+                playBtn.textContent = '⏸ Berhenti';
+                statusText.textContent = '▶ Sedang diputar...';
+            } else {
+                vinylDisc.classList.remove('playing');
+                vinylLabel.classList.remove('playing');
+                tonearm.classList.remove('playing');
+                playBtn.textContent = '▶ Putar';
+                statusText.textContent = '⏸ Dijeda';
+            }
         }
-        
-        function spinWheel() {
-            if (isSpinning) return;
-            
-            isSpinning = true;
-            document.getElementById('spinBtn').disabled = true;
-            document.getElementById('resultText').textContent = '';
-            
-            const randomSpin = Math.floor(Math.random() * 360) + 3600;
-            const newRotation = currentRotation + randomSpin;
-            
-            const wheel = document.getElementById('wheel');
-            wheel.style.transition = 'transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            wheel.style.transform = `rotate(${newRotation}deg)`;
-            
-            currentRotation = newRotation % 360;
-            
-            setTimeout(() => {
-                isSpinning = false;
-                document.getElementById('spinBtn').disabled = false;
-                
-                const winningIndex = Math.floor((360 - (currentRotation % 360)) / (360 / items.length)) % items.length;
-                const winner = items[winningIndex];
-                
-                document.getElementById('resultText').innerHTML = `<span class="result-text">🎉 ${winner}</span>`;
-                
-                wheel.style.transition = 'none';
-            }, 4000);
-        }
-        
-        function resetWheel() {
-            if (isSpinning) return;
-            
-            const wheel = document.getElementById('wheel');
-            wheel.style.transition = 'transform 0.5s ease';
-            wheel.style.transform = 'rotate(0deg)';
-            currentRotation = 0;
-            document.getElementById('resultText').textContent = '';
-        }
-        
-        // Initialize wheel on page load
-        window.addEventListener('load', initializeWheel);
     </script>
 </body>
 </html>
